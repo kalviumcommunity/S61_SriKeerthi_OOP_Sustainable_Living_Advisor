@@ -14,8 +14,10 @@ private:
     int sustainabilityScore;
 
 public:
+    // Constructor
     User(string name) : name(name), sustainabilityScore(0) {}
 
+    // Setter functions
     void setEnergyUsage(int usage) {
         this->energyUsage = usage;
     }
@@ -32,6 +34,11 @@ public:
         this->transportationMode = mode;
     }
 
+    void setSustainabilityScore(int score) {
+        this->sustainabilityScore = score;
+    }
+
+    // Getter functions
     int getEnergyUsage() const {
         return this->energyUsage;
     }
@@ -48,14 +55,11 @@ public:
         return this->transportationMode;
     }
 
-    void setSustainabilityScore(int score) {
-        this->sustainabilityScore = score;
-    }
-
     int getSustainabilityScore() const {
         return this->sustainabilityScore;
     }
 
+    // Display user information
     void displayUserInfo() const {
         cout << "User: " << this->name << endl;
         cout << "Sustainability Score: " << this->sustainabilityScore << endl;
@@ -127,7 +131,7 @@ public:
         if (user.getWasteGenerated() > 10) {
             cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
         }
-        if (user.getTransportationMode() == 1) {
+        if (user.getTransportationMode() == 1) {  // Car
             cout << "Try using public transportation, cycling, or walking instead of driving.\n";
         }
     }
@@ -155,13 +159,25 @@ public:
 
 // Main function to run the program
 int main() {
-    string name;
-    cout << "Welcome to the Sustainable Living Advisor!\n";
-    cout << "Please enter your name: ";
-    cin >> name;
+    const int numUsers = 3; // Number of users
 
-    SustainableLivingAdvisor advisor(name);
-    advisor.run();
+    // Create an array of SustainableLivingAdvisor objects
+    SustainableLivingAdvisor advisors[numUsers] = {
+        SustainableLivingAdvisor(""),
+        SustainableLivingAdvisor(""),
+        SustainableLivingAdvisor("")
+    };
+
+    for (int i = 0; i < numUsers; ++i) {
+        string name;
+        cout << "\nWelcome to the Sustainable Living Advisor!\n";
+        cout << "Please enter your name: ";
+        cin >> name;
+        
+        // Reinitialize User object with the input name
+        advisors[i] = SustainableLivingAdvisor(name);
+        advisors[i].run();
+    }
 
     return 0;
 }
