@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -15,51 +14,51 @@ private:
     int sustainabilityScore;
 
 public:
-    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
-    //member functions
+    User(string name) : name(name), sustainabilityScore(0) {}
+
     void setEnergyUsage(int usage) {
-        energyUsage = usage;
+        this->energyUsage = usage;
     }
 
     void setWaterUsage(int usage) {
-        waterUsage = usage;
+        this->waterUsage = usage;
     }
 
     void setWasteGenerated(int waste) {
-        wasteGenerated = waste;
+        this->wasteGenerated = waste;
     }
 
     void setTransportationMode(int mode) {
-        transportationMode = mode;
+        this->transportationMode = mode;
     }
 
     int getEnergyUsage() const {
-        return energyUsage;
+        return this->energyUsage;
     }
 
     int getWaterUsage() const {
-        return waterUsage;
+        return this->waterUsage;
     }
 
     int getWasteGenerated() const {
-        return wasteGenerated;
+        return this->wasteGenerated;
     }
 
     int getTransportationMode() const {
-        return transportationMode;
+        return this->transportationMode;
     }
 
     void setSustainabilityScore(int score) {
-        sustainabilityScore = score;
+        this->sustainabilityScore = score;
     }
 
     int getSustainabilityScore() const {
-        return sustainabilityScore;
+        return this->sustainabilityScore;
     }
 
     void displayUserInfo() const {
-        cout << "User: " << name << endl;
-        cout << "Sustainability Score: " << sustainabilityScore << endl;
+        cout << "User: " << this->name << endl;
+        cout << "Sustainability Score: " << this->sustainabilityScore << endl;
     }
 };
 
