@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -14,55 +15,51 @@ private:
     int sustainabilityScore;
 
 public:
-    // Constructor
-    User(string name) : name(name), sustainabilityScore(0) {}
-
-    // Setter functions
+    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
+    //member functions
     void setEnergyUsage(int usage) {
-        this->energyUsage = usage;
+        energyUsage = usage;
     }
 
     void setWaterUsage(int usage) {
-        this->waterUsage = usage;
+        waterUsage = usage;
     }
 
     void setWasteGenerated(int waste) {
-        this->wasteGenerated = waste;
+        wasteGenerated = waste;
     }
 
     void setTransportationMode(int mode) {
-        this->transportationMode = mode;
+        transportationMode = mode;
     }
 
-    void setSustainabilityScore(int score) {
-        this->sustainabilityScore = score;
-    }
-
-    // Getter functions
     int getEnergyUsage() const {
-        return this->energyUsage;
+        return energyUsage;
     }
 
     int getWaterUsage() const {
-        return this->waterUsage;
+        return waterUsage;
     }
 
     int getWasteGenerated() const {
-        return this->wasteGenerated;
+        return wasteGenerated;
     }
 
     int getTransportationMode() const {
-        return this->transportationMode;
+        return transportationMode;
+    }
+
+    void setSustainabilityScore(int score) {
+        sustainabilityScore = score;
     }
 
     int getSustainabilityScore() const {
-        return this->sustainabilityScore;
+        return sustainabilityScore;
     }
 
-    // Display user information
     void displayUserInfo() const {
-        cout << "User: " << this->name << endl;
-        cout << "Sustainability Score: " << this->sustainabilityScore << endl;
+        cout << "User: " << name << endl;
+        cout << "Sustainability Score: " << sustainabilityScore << endl;
     }
 };
 
@@ -131,7 +128,7 @@ public:
         if (user.getWasteGenerated() > 10) {
             cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
         }
-        if (user.getTransportationMode() == 1) {  // Car
+        if (user.getTransportationMode() == 1) {
             cout << "Try using public transportation, cycling, or walking instead of driving.\n";
         }
     }
@@ -159,25 +156,13 @@ public:
 
 // Main function to run the program
 int main() {
-    const int numUsers = 3; // Number of users
+    string name;
+    cout << "Welcome to the Sustainable Living Advisor!\n";
+    cout << "Please enter your name: ";
+    cin >> name;
 
-    // Create an array of SustainableLivingAdvisor objects
-    SustainableLivingAdvisor advisors[numUsers] = {
-        SustainableLivingAdvisor(""),
-        SustainableLivingAdvisor(""),
-        SustainableLivingAdvisor("")
-    };
-
-    for (int i = 0; i < numUsers; ++i) {
-        string name;
-        cout << "\nWelcome to the Sustainable Living Advisor!\n";
-        cout << "Please enter your name: ";
-        cin >> name;
-        
-        // Reinitialize User object with the input name
-        advisors[i] = SustainableLivingAdvisor(name);
-        advisors[i].run();
-    }
+    SustainableLivingAdvisor advisor(name);
+    advisor.run();
 
     return 0;
 }
