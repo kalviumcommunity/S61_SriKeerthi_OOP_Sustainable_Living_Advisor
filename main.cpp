@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+
 using namespace std;
 
 // User class to store user data
@@ -15,8 +16,15 @@ private:
     int sustainabilityScore;
 
 public:
+
+    // Constructor
+    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
+
+    // Member functions
+
     User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
     //member functions
+
     void setEnergyUsage(int usage) {
         energyUsage = usage;
     }
@@ -66,46 +74,45 @@ public:
 // Questionnaire class to handle user questions
 class Questionnaire {
 public:
-    void askQuestions(User& user) {
+    void askQuestions(User* user) {
         int energyUsage, waterUsage, wasteGenerated, transportationMode;
 
         cout << "How many kWh of electricity do you use per month? ";
         cin >> energyUsage;
-        user.setEnergyUsage(energyUsage);
+        user->setEnergyUsage(energyUsage);
 
         cout << "How many liters of water do you use per day? ";
         cin >> waterUsage;
-        user.setWaterUsage(waterUsage);
+        user->setWaterUsage(waterUsage);
 
         cout << "How many kilograms of waste do you generate per week? ";
         cin >> wasteGenerated;
-        user.setWasteGenerated(wasteGenerated);
+        user->setWasteGenerated(wasteGenerated);
 
         cout << "Select your primary mode of transportation (1- Car, 2- Bus, 3- Bicycle, 4- Walk): ";
         cin >> transportationMode;
-        user.setTransportationMode(transportationMode);
+        user->setTransportationMode(transportationMode);
     }
 };
 
 // ScoreCalculator class to calculate the sustainability score
 class ScoreCalculator {
 public:
-    int calculateScore(const User& user) {
+    int calculateScore(const User* user) {
         int score = 100;
 
-        // Example scoring logic
-        if (user.getEnergyUsage() > 500) {
+        if (user->getEnergyUsage() > 500) {
             score -= 20;
         }
-        if (user.getWaterUsage() > 150) {
+        if (user->getWaterUsage() > 150) {
             score -= 20;
         }
-        if (user.getWasteGenerated() > 10) {
+        if (user->getWasteGenerated() > 10) {
             score -= 20;
         }
-        if (user.getTransportationMode() == 1) {  // Car
+        if (user->getTransportationMode() == 1) {  // Car
             score -= 30;
-        } else if (user.getTransportationMode() == 2) {  // Bus
+        } else if (user->getTransportationMode() == 2) {  // Bus
             score -= 10;
         }
 
@@ -116,19 +123,23 @@ public:
 // Advice class to provide tailored advice
 class Advice {
 public:
-    void giveAdvice(const User& user) {
+    void giveAdvice(const User* user) {
         cout << "\n--- Advice for Sustainable Living ---\n";
 
-        if (user.getEnergyUsage() > 500) {
+        if (user->getEnergyUsage() > 500) {
             cout << "Consider reducing your energy usage. Use energy-efficient appliances and unplug devices when not in use.\n";
         }
-        if (user.getWaterUsage() > 150) {
+        if (user->getWaterUsage() > 150) {
             cout << "Try to reduce your water consumption. Consider shorter showers and fixing leaks.\n";
         }
-        if (user.getWasteGenerated() > 10) {
+        if (user->getWasteGenerated() > 10) {
             cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
         }
+
+        if (user->getTransportationMode() == 1) {
+
         if (user.getTransportationMode() == 1) {
+
             cout << "Try using public transportation, cycling, or walking instead of driving.\n";
         }
     }
@@ -137,20 +148,35 @@ public:
 // Central class to manage the entire process
 class SustainableLivingAdvisor {
 private:
-    User user;
-    Questionnaire questionnaire;
-    ScoreCalculator scoreCalculator;
-    Advice advice;
+    User* user;
+    Questionnaire* questionnaire;
+    ScoreCalculator* scoreCalculator;
+    Advice* advice;
 
 public:
-    SustainableLivingAdvisor(string userName) : user(userName) {}
+    // Constructor
+    SustainableLivingAdvisor(string userName) {
+        user = new User(userName);
+        questionnaire = new Questionnaire();
+        scoreCalculator = new ScoreCalculator();
+        advice = new Advice();
+    }
 
+    // Destructor
+    ~SustainableLivingAdvisor() {
+        delete user;
+        delete questionnaire;
+        delete scoreCalculator;
+        delete advice;
+    }
+
+    // Main function to run the process
     void run() {
-        questionnaire.askQuestions(user);
-        int score = scoreCalculator.calculateScore(user);
-        user.setSustainabilityScore(score);
-        user.displayUserInfo();
-        advice.giveAdvice(user);
+        questionnaire->askQuestions(user);
+        int score = scoreCalculator->calculateScore(user);
+        user->setSustainabilityScore(score);
+        user->displayUserInfo();
+        advice->giveAdvice(user);
     }
 };
 
@@ -161,8 +187,14 @@ int main() {
     cout << "Please enter your name: ";
     cin >> name;
 
+    SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name);
+    advisor->run();
+    
+    delete advisor;
+
     SustainableLivingAdvisor advisor(name);
     advisor.run();
+
 
     return 0;
 }
