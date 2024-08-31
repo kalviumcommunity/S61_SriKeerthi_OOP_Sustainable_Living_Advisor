@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
+
 using namespace std;
 
 // User class to store user data
@@ -13,10 +16,15 @@ private:
     int sustainabilityScore;
 
 public:
+
     // Constructor
     User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
 
     // Member functions
+
+    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
+    //member functions
+
     void setEnergyUsage(int usage) {
         energyUsage = usage;
     }
@@ -127,7 +135,11 @@ public:
         if (user->getWasteGenerated() > 10) {
             cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
         }
+
         if (user->getTransportationMode() == 1) {
+
+        if (user.getTransportationMode() == 1) {
+
             cout << "Try using public transportation, cycling, or walking instead of driving.\n";
         }
     }
@@ -179,6 +191,10 @@ int main() {
     advisor->run();
     
     delete advisor;
+
+    SustainableLivingAdvisor advisor(name);
+    advisor.run();
+
 
     return 0;
 }
