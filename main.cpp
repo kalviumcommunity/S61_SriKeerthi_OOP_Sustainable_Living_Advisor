@@ -12,14 +12,19 @@ private:
     int transportationMode;
     int sustainabilityScore;
 
-    // Static variables to track total scores and user count
-    static int totalSustainabilityScore;
-    static int userCount;
+    // Static variables to track total users and total score
+    static int totalUsers;
+    static int totalScore;
 
 public:
     // Constructor
     User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
-        userCount++; // Increment user count when a new User object is created
+        totalUsers++; // Increment total users when a new user is created
+    }
+
+    // Destructor
+    ~User() {
+        totalUsers--; // Decrement total users when a user is deleted
     }
 
     // Member functions
@@ -57,7 +62,7 @@ public:
 
     void setSustainabilityScore(int score) {
         sustainabilityScore = score;
-        totalSustainabilityScore += score; // Add this user's score to the total score
+        totalScore += score; // Add to total score when setting the sustainability score
     }
 
     int getSustainabilityScore() const {
@@ -69,19 +74,19 @@ public:
         cout << "Sustainability Score: " << sustainabilityScore << endl;
     }
 
-    // Static function to display overall statistics
-    static void displayOverallStatistics() {
-        cout << "\n--- Overall Sustainability Statistics ---\n";
-        cout << "Total Users: " << userCount << endl;
-        if (userCount > 0) {
-            cout << "Average Sustainability Score: " << totalSustainabilityScore / userCount << endl;
+    // Static function to display the average sustainability score
+    static void displayAverageScore() {
+        if (totalUsers > 0) {
+            cout << "Average Sustainability Score: " << totalScore / totalUsers << endl;
+        } else {
+            cout << "No users to calculate an average score." << endl;
         }
     }
 };
 
 // Initialize static variables
-int User::totalSustainabilityScore = 0;
-int User::userCount = 0;
+int User::totalUsers = 0;
+int User::totalScore = 0;
 
 // Questionnaire class to handle user questions
 class Questionnaire {
@@ -185,9 +190,6 @@ public:
         user->setSustainabilityScore(score);
         user->displayUserInfo();
         advice->giveAdvice(user);
-
-        // Display overall statistics after each user's session
-        User::displayOverallStatistics();
     }
 };
 
@@ -200,6 +202,8 @@ int main() {
 
     SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name);
     advisor->run();
+    
+    User::displayAverageScore(); // Display the average score after the process
 
     delete advisor;
 
