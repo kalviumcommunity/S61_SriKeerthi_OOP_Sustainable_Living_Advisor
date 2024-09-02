@@ -12,14 +12,14 @@ private:
     int transportationMode;
     int sustainabilityScore;
 
-    // Static variables
-    static int totalUsers;
-    static int cumulativeScore;
+    // Static variables to track total scores and user count
+    static int totalSustainabilityScore;
+    static int userCount;
 
 public:
     // Constructor
     User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
-        totalUsers++; // Increment total users
+        userCount++; // Increment user count when a new User object is created
     }
 
     // Member functions
@@ -57,7 +57,7 @@ public:
 
     void setSustainabilityScore(int score) {
         sustainabilityScore = score;
-        cumulativeScore += score; // Add to cumulative score
+        totalSustainabilityScore += score; // Add this user's score to the total score
     }
 
     int getSustainabilityScore() const {
@@ -69,19 +69,19 @@ public:
         cout << "Sustainability Score: " << sustainabilityScore << endl;
     }
 
-    // Static member functions
-    static int getTotalUsers() {
-        return totalUsers;
-    }
-
-    static int getCumulativeScore() {
-        return cumulativeScore;
+    // Static function to display overall statistics
+    static void displayOverallStatistics() {
+        cout << "\n--- Overall Sustainability Statistics ---\n";
+        cout << "Total Users: " << userCount << endl;
+        if (userCount > 0) {
+            cout << "Average Sustainability Score: " << totalSustainabilityScore / userCount << endl;
+        }
     }
 };
 
 // Initialize static variables
-int User::totalUsers = 0;
-int User::cumulativeScore = 0;
+int User::totalSustainabilityScore = 0;
+int User::userCount = 0;
 
 // Questionnaire class to handle user questions
 class Questionnaire {
@@ -186,9 +186,8 @@ public:
         user->displayUserInfo();
         advice->giveAdvice(user);
 
-        // Display total users and cumulative score
-        cout << "\nTotal Users: " << User::getTotalUsers() << endl;
-        cout << "Cumulative Sustainability Score: " << User::getCumulativeScore() << endl;
+        // Display overall statistics after each user's session
+        User::displayOverallStatistics();
     }
 };
 
@@ -201,7 +200,7 @@ int main() {
 
     SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name);
     advisor->run();
-    
+
     delete advisor;
 
     return 0;
