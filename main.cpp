@@ -1,8 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
-
-
 using namespace std;
 
 // User class to store user data
@@ -15,16 +12,17 @@ private:
     int transportationMode;
     int sustainabilityScore;
 
-public:
+    // Static variables to track total scores and user count
+    static int totalSustainabilityScore;
+    static int userCount;
 
+public:
     // Constructor
-    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
+    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
+        userCount++; // Increment user count when a new User object is created
+    }
 
     // Member functions
-
-    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {}
-    //member functions
-
     void setEnergyUsage(int usage) {
         energyUsage = usage;
     }
@@ -59,6 +57,7 @@ public:
 
     void setSustainabilityScore(int score) {
         sustainabilityScore = score;
+        totalSustainabilityScore += score; // Add this user's score to the total score
     }
 
     int getSustainabilityScore() const {
@@ -69,7 +68,20 @@ public:
         cout << "User: " << name << endl;
         cout << "Sustainability Score: " << sustainabilityScore << endl;
     }
+
+    // Static function to display overall statistics
+    static void displayOverallStatistics() {
+        cout << "\n--- Overall Sustainability Statistics ---\n";
+        cout << "Total Users: " << userCount << endl;
+        if (userCount > 0) {
+            cout << "Average Sustainability Score: " << totalSustainabilityScore / userCount << endl;
+        }
+    }
 };
+
+// Initialize static variables
+int User::totalSustainabilityScore = 0;
+int User::userCount = 0;
 
 // Questionnaire class to handle user questions
 class Questionnaire {
@@ -135,11 +147,7 @@ public:
         if (user->getWasteGenerated() > 10) {
             cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
         }
-
         if (user->getTransportationMode() == 1) {
-
-        if (user.getTransportationMode() == 1) {
-
             cout << "Try using public transportation, cycling, or walking instead of driving.\n";
         }
     }
@@ -177,6 +185,9 @@ public:
         user->setSustainabilityScore(score);
         user->displayUserInfo();
         advice->giveAdvice(user);
+
+        // Display overall statistics after each user's session
+        User::displayOverallStatistics();
     }
 };
 
@@ -189,12 +200,8 @@ int main() {
 
     SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name);
     advisor->run();
-    
+
     delete advisor;
-
-    SustainableLivingAdvisor advisor(name);
-    advisor.run();
-
 
     return 0;
 }
