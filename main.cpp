@@ -186,6 +186,7 @@ public:
         user->displayUserInfo();
         advice->giveAdvice(user);
 
+        // **Static Member Function Usage:**
         // Display overall statistics after each user's session
         User::displayOverallStatistics();
     }
