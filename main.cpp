@@ -22,44 +22,43 @@ public:
         userCount++; // Increment user count when a new User object is created
     }
 
-    // Member functions
+    // Accessor and Mutator for energyUsage
     void setEnergyUsage(int usage) {
         energyUsage = usage;
     }
-
-    void setWaterUsage(int usage) {
-        waterUsage = usage;
-    }
-
-    void setWasteGenerated(int waste) {
-        wasteGenerated = waste;
-    }
-
-    void setTransportationMode(int mode) {
-        transportationMode = mode;
-    }
-
     int getEnergyUsage() const {
         return energyUsage;
     }
 
+    // Accessor and Mutator for waterUsage
+    void setWaterUsage(int usage) {
+        waterUsage = usage;
+    }
     int getWaterUsage() const {
         return waterUsage;
     }
 
+    // Accessor and Mutator for wasteGenerated
+    void setWasteGenerated(int waste) {
+        wasteGenerated = waste;
+    }
     int getWasteGenerated() const {
         return wasteGenerated;
     }
 
+    // Accessor and Mutator for transportationMode
+    void setTransportationMode(int mode) {
+        transportationMode = mode;
+    }
     int getTransportationMode() const {
         return transportationMode;
     }
 
+    // Accessor and Mutator for sustainabilityScore
     void setSustainabilityScore(int score) {
         sustainabilityScore = score;
         totalSustainabilityScore += score; // Add this user's score to the total score
     }
-
     int getSustainabilityScore() const {
         return sustainabilityScore;
     }
@@ -82,6 +81,32 @@ public:
 // Initialize static variables
 int User::totalSustainabilityScore = 0;
 int User::userCount = 0;
+
+// ScoreCalculator class to calculate the sustainability score
+class ScoreCalculator {
+public:
+    int calculateScore(const User& user) { // Accept User by reference
+        int score = 100;
+
+        // Use accessors to get user data
+        if (user.getEnergyUsage() > 500) {
+            score -= 20;
+        }
+        if (user.getWaterUsage() > 150) {
+            score -= 20;
+        }
+        if (user.getWasteGenerated() > 10) {
+            score -= 20;
+        }
+        if (user.getTransportationMode() == 1) {  // Car
+            score -= 30;
+        } else if (user.getTransportationMode() == 2) {  // Bus
+            score -= 10;
+        }
+
+        return score;
+    }
+};
 
 // Questionnaire class to handle user questions
 class Questionnaire {
@@ -107,47 +132,22 @@ public:
     }
 };
 
-// ScoreCalculator class to calculate the sustainability score
-class ScoreCalculator {
-public:
-    int calculateScore(const User* user) {
-        int score = 100;
-
-        if (user->getEnergyUsage() > 500) {
-            score -= 20;
-        }
-        if (user->getWaterUsage() > 150) {
-            score -= 20;
-        }
-        if (user->getWasteGenerated() > 10) {
-            score -= 20;
-        }
-        if (user->getTransportationMode() == 1) {  // Car
-            score -= 30;
-        } else if (user->getTransportationMode() == 2) {  // Bus
-            score -= 10;
-        }
-
-        return score;
-    }
-};
-
 // Advice class to provide tailored advice
 class Advice {
 public:
-    void giveAdvice(const User* user) {
+    void giveAdvice(const User& user) { // Accept User by reference
         cout << "\n--- Advice for Sustainable Living ---\n";
 
-        if (user->getEnergyUsage() > 500) {
+        if (user.getEnergyUsage() > 500) {
             cout << "Consider reducing your energy usage. Use energy-efficient appliances and unplug devices when not in use.\n";
         }
-        if (user->getWaterUsage() > 150) {
+        if (user.getWaterUsage() > 150) {
             cout << "Try to reduce your water consumption. Consider shorter showers and fixing leaks.\n";
         }
-        if (user->getWasteGenerated() > 10) {
+        if (user.getWasteGenerated() > 10) {
             cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
         }
-        if (user->getTransportationMode() == 1) {
+        if (user.getTransportationMode() == 1) {
             cout << "Try using public transportation, cycling, or walking instead of driving.\n";
         }
     }
@@ -181,12 +181,11 @@ public:
     // Main function to run the process
     void run() {
         questionnaire->askQuestions(user);
-        int score = scoreCalculator->calculateScore(user);
+        int score = scoreCalculator->calculateScore(*user); // Pass User by reference
         user->setSustainabilityScore(score);
         user->displayUserInfo();
-        advice->giveAdvice(user);
+        advice->giveAdvice(*user); // Pass User by reference
 
-        // **Static Member Function Usage:**
         // Display overall statistics after each user's session
         User::displayOverallStatistics();
     }
