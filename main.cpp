@@ -22,46 +22,24 @@ public:
         userCount++; // Increment user count when a new User object is created
     }
 
-    // Accessor and Mutator for energyUsage
-    void setEnergyUsage(int usage) {
-        energyUsage = usage;
-    }
-    int getEnergyUsage() const {
-        return energyUsage;
-    }
+    // Accessors and Mutators
+    void setEnergyUsage(int usage) { energyUsage = usage; }
+    int getEnergyUsage() const { return energyUsage; }
 
-    // Accessor and Mutator for waterUsage
-    void setWaterUsage(int usage) {
-        waterUsage = usage;
-    }
-    int getWaterUsage() const {
-        return waterUsage;
-    }
+    void setWaterUsage(int usage) { waterUsage = usage; }
+    int getWaterUsage() const { return waterUsage; }
 
-    // Accessor and Mutator for wasteGenerated
-    void setWasteGenerated(int waste) {
-        wasteGenerated = waste;
-    }
-    int getWasteGenerated() const {
-        return wasteGenerated;
-    }
+    void setWasteGenerated(int waste) { wasteGenerated = waste; }
+    int getWasteGenerated() const { return wasteGenerated; }
 
-    // Accessor and Mutator for transportationMode
-    void setTransportationMode(int mode) {
-        transportationMode = mode;
-    }
-    int getTransportationMode() const {
-        return transportationMode;
-    }
+    void setTransportationMode(int mode) { transportationMode = mode; }
+    int getTransportationMode() const { return transportationMode; }
 
-    // Accessor and Mutator for sustainabilityScore
     void setSustainabilityScore(int score) {
         sustainabilityScore = score;
         totalSustainabilityScore += score; // Add this user's score to the total score
     }
-    int getSustainabilityScore() const {
-        return sustainabilityScore;
-    }
+    int getSustainabilityScore() const { return sustainabilityScore; }
 
     void displayUserInfo() const {
         cout << "User: " << name << endl;
@@ -89,20 +67,11 @@ public:
         int score = 100;
 
         // Use accessors to get user data
-        if (user.getEnergyUsage() > 500) {
-            score -= 20;
-        }
-        if (user.getWaterUsage() > 150) {
-            score -= 20;
-        }
-        if (user.getWasteGenerated() > 10) {
-            score -= 20;
-        }
-        if (user.getTransportationMode() == 1) {  // Car
-            score -= 30;
-        } else if (user.getTransportationMode() == 2) {  // Bus
-            score -= 10;
-        }
+        if (user.getEnergyUsage() > 500) score -= 20;
+        if (user.getWaterUsage() > 150) score -= 20;
+        if (user.getWasteGenerated() > 10) score -= 20;
+        if (user.getTransportationMode() == 1) score -= 30; // Car
+        else if (user.getTransportationMode() == 2) score -= 10; // Bus
 
         return score;
     }
