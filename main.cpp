@@ -17,9 +17,22 @@ private:
     static int userCount;
 
 public:
-    // Constructor
-    User(string name) : name(name), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
-        userCount++; // Increment user count when a new User object is created
+    // Default Constructor
+    User() : name("Unknown"), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
+        userCount++; // Increment user count
+        cout << "Default constructor called for User.\n";
+    }
+
+    // Parameterized Constructor
+    User(string userName) : name(userName), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
+        userCount++; // Increment user count
+        cout << "Parameterized constructor called for User: " << name << endl;
+    }
+
+    // Destructor
+    ~User() {
+        cout << "Destructor called for User: " << name << endl;
+        userCount--; // Decrement user count when a User object is destroyed
     }
 
     // Accessors and Mutators
@@ -133,7 +146,7 @@ private:
 public:
     // Constructor
     SustainableLivingAdvisor(string userName) {
-        user = new User(userName);
+        user = new User(userName); // Using parameterized constructor
         questionnaire = new Questionnaire();
         scoreCalculator = new ScoreCalculator();
         advice = new Advice();
@@ -141,6 +154,7 @@ public:
 
     // Destructor
     ~SustainableLivingAdvisor() {
+        cout << "Destructor called for SustainableLivingAdvisor.\n";
         delete user;
         delete questionnaire;
         delete scoreCalculator;
@@ -167,10 +181,10 @@ int main() {
     cout << "Please enter your name: ";
     cin >> name;
 
-    SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name);
+    SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name); // Using parameterized constructor
     advisor->run();
 
-    delete advisor;
+    delete advisor; // Explicitly deleting the object to call the destructor
 
     return 0;
 }
