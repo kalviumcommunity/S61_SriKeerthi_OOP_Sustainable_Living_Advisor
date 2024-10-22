@@ -2,7 +2,6 @@
 #include <string>
 using namespace std;
 
-// Base class Person (Single inheritance)
 class Person {
 protected:
     string name;
@@ -15,8 +14,13 @@ public:
         cout << "Person parameterized constructor called for " << name << endl;
     }
 
-    string getName() const {
+    virtual string getName() const {
         return name;
+    }
+
+    // Virtual function to demonstrate runtime polymorphism
+    virtual void displayUserInfo() const {
+        cout << "Person Name: " << name << endl;
     }
 
     virtual ~Person() {
@@ -24,7 +28,7 @@ public:
     }
 };
 
-// Base class Sustainability (Multiple inheritance)
+
 class Sustainability {
 protected:
     int energyUsage;
@@ -79,16 +83,21 @@ public:
         userCount--; // Decrement user count when a User object is destroyed
     }
 
-    // Set Sustainability Score
-    void setSustainabilityScore(int score) {
-        sustainabilityScore = score;
-        totalSustainabilityScore += score; // Add this user's score to the total score
+    // Function Overloading - Polymorphism: Overloaded function to set sustainability score
+    void setSustainabilityScore() { // Overloaded function with no argument
+        sustainabilityScore = 50; // Default score
+        totalSustainabilityScore += sustainabilityScore;
     }
-    
+
+    void setSustainabilityScore(int score) { // Overloaded function with one argument
+        sustainabilityScore = score;
+        totalSustainabilityScore += score;
+    }
+
     int getSustainabilityScore() const { return sustainabilityScore; }
 
-    // Display User Information
-    void displayUserInfo() const {
+    // Overriding base class virtual function (Polymorphism)
+    void displayUserInfo() const override {
         cout << "User: " << name << endl;
         cout << "Sustainability Score: " << sustainabilityScore << endl;
     }
@@ -199,8 +208,8 @@ public:
     void run() {
         questionnaire->askQuestions(user);
         int score = scoreCalculator->calculateScore(*user); // Pass User by reference
-        user->setSustainabilityScore(score);
-        user->displayUserInfo();
+        user->setSustainabilityScore(score); // Overloaded function
+        user->displayUserInfo(); // Demonstrates runtime polymorphism
         advice->giveAdvice(*user); // Pass User by reference
 
         // Display overall statistics after each user's session
