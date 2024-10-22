@@ -2,40 +2,40 @@
 #include <string>
 using namespace std;
 
-// User class to store user data
-class User {
-private:
+// Base class Person (Single inheritance)
+class Person {
+protected:
     string name;
+public:
+    Person() : name("Unknown") {
+        cout << "Person default constructor called.\n";
+    }
+
+    Person(string userName) : name(userName) {
+        cout << "Person parameterized constructor called for " << name << endl;
+    }
+
+    string getName() const {
+        return name;
+    }
+
+    virtual ~Person() {
+        cout << "Person destructor called for " << name << endl;
+    }
+};
+
+// Base class Sustainability (Multiple inheritance)
+class Sustainability {
+protected:
     int energyUsage;
     int waterUsage;
     int wasteGenerated;
     int transportationMode;
-    int sustainabilityScore;
-
-    // Static variables to track total scores and user count
-    static int totalSustainabilityScore;
-    static int userCount;
-
 public:
-    // Default Constructor
-    User() : name("Unknown"), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
-        userCount++; // Increment user count
-        cout << "Default constructor called for User.\n";
+    Sustainability() : energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0) {
+        cout << "Sustainability default constructor called.\n";
     }
 
-    // Parameterized Constructor
-    User(string userName) : name(userName), energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0), sustainabilityScore(0) {
-        userCount++; // Increment user count
-        cout << "Parameterized constructor called for User: " << name << endl;
-    }
-
-    // Destructor
-    ~User() {
-        cout << "Destructor called for User: " << name << endl;
-        userCount--; // Decrement user count when a User object is destroyed
-    }
-
-    // Accessors and Mutators
     void setEnergyUsage(int usage) { energyUsage = usage; }
     int getEnergyUsage() const { return energyUsage; }
 
@@ -48,12 +48,46 @@ public:
     void setTransportationMode(int mode) { transportationMode = mode; }
     int getTransportationMode() const { return transportationMode; }
 
+    virtual ~Sustainability() {
+        cout << "Sustainability destructor called.\n";
+    }
+};
+
+// User class inheriting from Person and Sustainability (Multiple inheritance)
+class User : public Person, public Sustainability {
+private:
+    int sustainabilityScore;
+    static int totalSustainabilityScore;
+    static int userCount;
+
+public:
+    // Default Constructor
+    User() : sustainabilityScore(0) {
+        userCount++; // Increment user count
+        cout << "User default constructor called.\n";
+    }
+
+    // Parameterized Constructor
+    User(string userName) : Person(userName), sustainabilityScore(0) {
+        userCount++; // Increment user count
+        cout << "User parameterized constructor called for " << name << endl;
+    }
+
+    // Destructor
+    ~User() {
+        cout << "User destructor called for " << name << endl;
+        userCount--; // Decrement user count when a User object is destroyed
+    }
+
+    // Set Sustainability Score
     void setSustainabilityScore(int score) {
         sustainabilityScore = score;
         totalSustainabilityScore += score; // Add this user's score to the total score
     }
+    
     int getSustainabilityScore() const { return sustainabilityScore; }
 
+    // Display User Information
     void displayUserInfo() const {
         cout << "User: " << name << endl;
         cout << "Sustainability Score: " << sustainabilityScore << endl;
