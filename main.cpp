@@ -2,6 +2,7 @@
 #include <string>
 using namespace std;
 
+// Abstract class Person (contains a pure virtual function)
 class Person {
 protected:
     string name;
@@ -18,17 +19,15 @@ public:
         return name;
     }
 
-    // Virtual function to demonstrate runtime polymorphism
-    virtual void displayUserInfo() const {
-        cout << "Person Name: " << name << endl;
-    }
+    // Pure virtual function making Person an abstract class
+    virtual void displayUserInfo() const = 0;
 
     virtual ~Person() {
         cout << "Person destructor called for " << name << endl;
     }
 };
 
-
+// Sustainability class
 class Sustainability {
 protected:
     int energyUsage;
@@ -57,7 +56,7 @@ public:
     }
 };
 
-// User class inheriting from Person and Sustainability (Multiple inheritance)
+// User class inheriting from Person and Sustainability
 class User : public Person, public Sustainability {
 private:
     int sustainabilityScore;
@@ -96,7 +95,7 @@ public:
 
     int getSustainabilityScore() const { return sustainabilityScore; }
 
-    // Overriding base class virtual function (Polymorphism)
+    // Overriding base class pure virtual function (Polymorphism)
     void displayUserInfo() const override {
         cout << "User: " << name << endl;
         cout << "Sustainability Score: " << sustainabilityScore << endl;
