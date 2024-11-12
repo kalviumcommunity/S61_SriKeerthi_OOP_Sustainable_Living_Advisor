@@ -7,12 +7,8 @@ class Person {
 protected:
     string name;
 public:
-    Person() : name("Unknown") {
-        cout << "Person default constructor called.\n";
-    }
-
-    Person(string userName) : name(userName) {
-        cout << "Person parameterized constructor called for " << name << endl;
+    Person(string userName = "Unknown") : name(userName) {
+        cout << "Person constructor called for " << name << endl;
     }
 
     virtual string getName() const {
@@ -27,17 +23,16 @@ public:
     }
 };
 
-// Sustainability class
-class Sustainability {
-protected:
+// Sustainability Data class to store user inputs
+class UserData {
+private:
     int energyUsage;
     int waterUsage;
     int wasteGenerated;
     int transportationMode;
+
 public:
-    Sustainability() : energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0) {
-        cout << "Sustainability default constructor called.\n";
-    }
+    UserData() : energyUsage(0), waterUsage(0), wasteGenerated(0), transportationMode(0) {}
 
     void setEnergyUsage(int usage) { energyUsage = usage; }
     int getEnergyUsage() const { return energyUsage; }
@@ -50,169 +45,100 @@ public:
 
     void setTransportationMode(int mode) { transportationMode = mode; }
     int getTransportationMode() const { return transportationMode; }
-
-    virtual ~Sustainability() {
-        cout << "Sustainability destructor called.\n";
-    }
 };
 
-// User class inheriting from Person and Sustainability
-class User : public Person, public Sustainability {
-private:
-    int sustainabilityScore;
-    static int totalSustainabilityScore;
-    static int userCount;
-
-public:
-    // Default Constructor
-    User() : sustainabilityScore(0) {
-        userCount++; // Increment user count
-        cout << "User default constructor called.\n";
-    }
-
-    // Parameterized Constructor
-    User(string userName) : Person(userName), sustainabilityScore(0) {
-        userCount++; // Increment user count
-        cout << "User parameterized constructor called for " << name << endl;
-    }
-
-    // Destructor
-    ~User() {
-        cout << "User destructor called for " << name << endl;
-        userCount--; // Decrement user count when a User object is destroyed
-    }
-
-    // Function Overloading - Polymorphism: Overloaded function to set sustainability score
-    void setSustainabilityScore() { // Overloaded function with no argument
-        sustainabilityScore = 50; // Default score
-        totalSustainabilityScore += sustainabilityScore;
-    }
-
-    void setSustainabilityScore(int score) { // Overloaded function with one argument
-        sustainabilityScore = score;
-        totalSustainabilityScore += score;
-    }
-
-    int getSustainabilityScore() const { return sustainabilityScore; }
-
-    // Overriding base class pure virtual function (Polymorphism)
-    void displayUserInfo() const override {
-        cout << "User: " << name << endl;
-        cout << "Sustainability Score: " << sustainabilityScore << endl;
-    }
-
-    // Static function to display overall statistics
-    static void displayOverallStatistics() {
-        cout << "\n--- Overall Sustainability Statistics ---\n";
-        cout << "Total Users: " << userCount << endl;
-        if (userCount > 0) {
-            cout << "Average Sustainability Score: " << totalSustainabilityScore / userCount << endl;
-        }
-    }
-};
-
-// Initialize static variables
-int User::totalSustainabilityScore = 0;
-int User::userCount = 0;
-
-// ScoreCalculator class to calculate the sustainability score
+// Class to calculate sustainability score based on UserData
 class ScoreCalculator {
 public:
-    int calculateScore(const User& user) { // Accept User by reference
+    int calculateScore(const UserData& data) { 
         int score = 100;
-
-        // Use accessors to get user data
-        if (user.getEnergyUsage() > 500) score -= 20;
-        if (user.getWaterUsage() > 150) score -= 20;
-        if (user.getWasteGenerated() > 10) score -= 20;
-        if (user.getTransportationMode() == 1) score -= 30; // Car
-        else if (user.getTransportationMode() == 2) score -= 10; // Bus
-
+        if (data.getEnergyUsage() > 500) score -= 20;
+        if (data.getWaterUsage() > 150) score -= 20;
+        if (data.getWasteGenerated() > 10) score -= 20;
+        if (data.getTransportationMode() == 1) score -= 30; // Car
+        else if (data.getTransportationMode() == 2) score -= 10; // Bus
         return score;
     }
 };
 
-// Questionnaire class to handle user questions
-class Questionnaire {
+// Class to provide tailored advice based on UserData
+class Advice {
 public:
-    void askQuestions(User* user) {
-        int energyUsage, waterUsage, wasteGenerated, transportationMode;
-
-        cout << "How many kWh of electricity do you use per month? ";
-        cin >> energyUsage;
-        user->setEnergyUsage(energyUsage);
-
-        cout << "How many liters of water do you use per day? ";
-        cin >> waterUsage;
-        user->setWaterUsage(waterUsage);
-
-        cout << "How many kilograms of waste do you generate per week? ";
-        cin >> wasteGenerated;
-        user->setWasteGenerated(wasteGenerated);
-
-        cout << "Select your primary mode of transportation (1- Car, 2- Bus, 3- Bicycle, 4- Walk): ";
-        cin >> transportationMode;
-        user->setTransportationMode(transportationMode);
+    void giveAdvice(const UserData& data) { 
+        cout << "\n--- Advice for Sustainable Living ---\n";
+        if (data.getEnergyUsage() > 500) {
+            cout << "Consider reducing your energy usage.\n";
+        }
+        if (data.getWaterUsage() > 150) {
+            cout << "Try to reduce your water consumption.\n";
+        }
+        if (data.getWasteGenerated() > 10) {
+            cout << "Reduce waste by recycling and composting.\n";
+        }
+        if (data.getTransportationMode() == 1) {
+            cout << "Try using public transportation.\n";
+        }
     }
 };
 
-// Advice class to provide tailored advice
-class Advice {
-public:
-    void giveAdvice(const User& user) { // Accept User by reference
-        cout << "\n--- Advice for Sustainable Living ---\n";
+// User class inheriting from Person
+class User : public Person {
+private:
+    int sustainabilityScore;
 
-        if (user.getEnergyUsage() > 500) {
-            cout << "Consider reducing your energy usage. Use energy-efficient appliances and unplug devices when not in use.\n";
-        }
-        if (user.getWaterUsage() > 150) {
-            cout << "Try to reduce your water consumption. Consider shorter showers and fixing leaks.\n";
-        }
-        if (user.getWasteGenerated() > 10) {
-            cout << "Reduce waste by recycling and composting. Avoid single-use plastics.\n";
-        }
-        if (user.getTransportationMode() == 1) {
-            cout << "Try using public transportation, cycling, or walking instead of driving.\n";
-        }
+public:
+    User(string userName) : Person(userName), sustainabilityScore(0) {}
+
+    void setSustainabilityScore(int score) { sustainabilityScore = score; }
+    int getSustainabilityScore() const { return sustainabilityScore; }
+
+    void displayUserInfo() const override {
+        cout << "User: " << name << endl;
+        cout << "Sustainability Score: " << sustainabilityScore << endl;
+    }
+};
+
+// Questionnaire class to gather data from the user
+class Questionnaire {
+public:
+    void askQuestions(UserData& data) {
+        int energyUsage, waterUsage, wasteGenerated, transportationMode;
+        cout << "How many kWh of electricity do you use per month? ";
+        cin >> energyUsage;
+        data.setEnergyUsage(energyUsage);
+
+        cout << "How many liters of water do you use per day? ";
+        cin >> waterUsage;
+        data.setWaterUsage(waterUsage);
+
+        cout << "How many kilograms of waste do you generate per week? ";
+        cin >> wasteGenerated;
+        data.setWasteGenerated(wasteGenerated);
+
+        cout << "Select your primary mode of transportation (1- Car, 2- Bus, 3- Bicycle, 4- Walk): ";
+        cin >> transportationMode;
+        data.setTransportationMode(transportationMode);
     }
 };
 
 // Central class to manage the entire process
 class SustainableLivingAdvisor {
 private:
-    User* user;
-    Questionnaire* questionnaire;
-    ScoreCalculator* scoreCalculator;
-    Advice* advice;
+    User user;
+    UserData userData;
+    Questionnaire questionnaire;
+    ScoreCalculator scoreCalculator;
+    Advice advice;
 
 public:
-    // Constructor
-    SustainableLivingAdvisor(string userName) {
-        user = new User(userName); // Using parameterized constructor
-        questionnaire = new Questionnaire();
-        scoreCalculator = new ScoreCalculator();
-        advice = new Advice();
-    }
+    SustainableLivingAdvisor(string userName) : user(userName) {}
 
-    // Destructor
-    ~SustainableLivingAdvisor() {
-        cout << "Destructor called for SustainableLivingAdvisor.\n";
-        delete user;
-        delete questionnaire;
-        delete scoreCalculator;
-        delete advice;
-    }
-
-    // Main function to run the process
     void run() {
-        questionnaire->askQuestions(user);
-        int score = scoreCalculator->calculateScore(*user); // Pass User by reference
-        user->setSustainabilityScore(score); // Overloaded function
-        user->displayUserInfo(); // Demonstrates runtime polymorphism
-        advice->giveAdvice(*user); // Pass User by reference
-
-        // Display overall statistics after each user's session
-        User::displayOverallStatistics();
+        questionnaire.askQuestions(userData);
+        int score = scoreCalculator.calculateScore(userData);
+        user.setSustainabilityScore(score);
+        user.displayUserInfo();
+        advice.giveAdvice(userData);
     }
 };
 
@@ -223,10 +149,8 @@ int main() {
     cout << "Please enter your name: ";
     cin >> name;
 
-    SustainableLivingAdvisor* advisor = new SustainableLivingAdvisor(name); // Using parameterized constructor
-    advisor->run();
-
-    delete advisor; // Explicitly deleting the object to call the destructor
+    SustainableLivingAdvisor advisor(name);
+    advisor.run();
 
     return 0;
 }
