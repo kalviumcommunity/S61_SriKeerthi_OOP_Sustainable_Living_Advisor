@@ -16,8 +16,6 @@ public:
         return name;
     }
 
-    //open for extension,closed for modification
-
     // Pure virtual function making Person an abstract class
     virtual void displayUserInfo() const = 0;
 
@@ -71,6 +69,20 @@ public:
     }
 };
 
+// Alternative ScoreCalculator: EcoScoreCalculator
+class EcoScoreCalculator : public ScoreCalculator {
+public:
+    int calculateScore(const UserData& data) override { 
+        int score = 100;
+        if (data.getEnergyUsage() > 300) score -= 15; // Adjusted threshold
+        if (data.getWaterUsage() > 100) score -= 15;
+        if (data.getWasteGenerated() > 8) score -= 15;
+        if (data.getTransportationMode() == 1) score -= 25; // Car
+        else if (data.getTransportationMode() == 2) score -= 5; // Bus
+        return score;
+    }
+};
+
 // Abstract base class for providing tailored advice
 class Advice {
 public:
@@ -94,6 +106,26 @@ public:
         }
         if (data.getTransportationMode() == 1) {
             cout << "Try using public transportation.\n";
+        }
+    }
+};
+
+// Alternative Advice provider: EcoAdvice
+class EcoAdvice : public Advice {
+public:
+    void giveAdvice(const UserData& data) override { 
+        cout << "\n--- Eco-Friendly Advice ---\n";
+        if (data.getEnergyUsage() > 300) {
+            cout << "Opt for renewable energy sources.\n";
+        }
+        if (data.getWaterUsage() > 100) {
+            cout << "Try using water-saving appliances.\n";
+        }
+        if (data.getWasteGenerated() > 8) {
+            cout << "Reduce waste by reusing and upcycling items.\n";
+        }
+        if (data.getTransportationMode() == 1) {
+            cout << "Consider carpooling or using electric vehicles.\n";
         }
     }
 };
@@ -167,7 +199,8 @@ int main() {
     cout << "Please enter your name: ";
     cin >> name;
 
-    SustainableLivingAdvisor advisor(name, make_unique<DefaultScoreCalculator>(), make_unique<DefaultAdvice>());
+    // Using EcoScoreCalculator and EcoAdvice to demonstrate LSP
+    SustainableLivingAdvisor advisor(name, make_unique<EcoScoreCalculator>(), make_unique<EcoAdvice>());
     advisor.run();
 
     return 0;
