@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <memory>
 using namespace std;
 
 // Abstract class Person (contains a pure virtual function)
@@ -14,6 +15,8 @@ public:
     virtual string getName() const {
         return name;
     }
+
+    //open for extension,closed for modification
 
     // Pure virtual function making Person an abstract class
     virtual void displayUserInfo() const = 0;
@@ -47,10 +50,17 @@ public:
     int getTransportationMode() const { return transportationMode; }
 };
 
-// Class to calculate sustainability score based on UserData
+// Abstract base class for Score Calculation
 class ScoreCalculator {
 public:
-    int calculateScore(const UserData& data) { 
+    virtual int calculateScore(const UserData& data) = 0;
+    virtual ~ScoreCalculator() = default;
+};
+
+// DefaultScoreCalculator: A concrete implementation of ScoreCalculator
+class DefaultScoreCalculator : public ScoreCalculator {
+public:
+    int calculateScore(const UserData& data) override { 
         int score = 100;
         if (data.getEnergyUsage() > 500) score -= 20;
         if (data.getWaterUsage() > 150) score -= 20;
@@ -61,10 +71,17 @@ public:
     }
 };
 
-// Class to provide tailored advice based on UserData
+// Abstract base class for providing tailored advice
 class Advice {
 public:
-    void giveAdvice(const UserData& data) { 
+    virtual void giveAdvice(const UserData& data) = 0;
+    virtual ~Advice() = default;
+};
+
+// DefaultAdvice: A concrete implementation of Advice
+class DefaultAdvice : public Advice {
+public:
+    void giveAdvice(const UserData& data) override { 
         cout << "\n--- Advice for Sustainable Living ---\n";
         if (data.getEnergyUsage() > 500) {
             cout << "Consider reducing your energy usage.\n";
@@ -127,18 +144,19 @@ private:
     User user;
     UserData userData;
     Questionnaire questionnaire;
-    ScoreCalculator scoreCalculator;
-    Advice advice;
+    unique_ptr<ScoreCalculator> scoreCalculator;
+    unique_ptr<Advice> advice;
 
 public:
-    SustainableLivingAdvisor(string userName) : user(userName) {}
+    SustainableLivingAdvisor(string userName, unique_ptr<ScoreCalculator> sc, unique_ptr<Advice> adv) 
+        : user(userName), scoreCalculator(move(sc)), advice(move(adv)) {}
 
     void run() {
         questionnaire.askQuestions(userData);
-        int score = scoreCalculator.calculateScore(userData);
+        int score = scoreCalculator->calculateScore(userData);
         user.setSustainabilityScore(score);
         user.displayUserInfo();
-        advice.giveAdvice(userData);
+        advice->giveAdvice(userData);
     }
 };
 
@@ -149,7 +167,7 @@ int main() {
     cout << "Please enter your name: ";
     cin >> name;
 
-    SustainableLivingAdvisor advisor(name);
+    SustainableLivingAdvisor advisor(name, make_unique<DefaultScoreCalculator>(), make_unique<DefaultAdvice>());
     advisor.run();
 
     return 0;
